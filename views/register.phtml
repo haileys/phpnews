@@ -1,0 +1,25 @@
+<h2>Register</h2>
+
+<?php if(!$user->errors->is_empty()): ?>
+	<div class="errors">
+		<ul>
+			<?php foreach($user->errors->full_messages() as $msg): ?>
+				<li><?php h($msg) ?></li>
+			<?php endforeach; ?>
+		</ul>
+	</div>
+<?php endif; ?>
+
+<?php form_for($user, "POST", "register", $f) ?>
+	<?php $f->label("username") ?>
+	<?php $f->text_field("username") ?>
+	
+	<?php $f->label("password") ?>
+	<?php $f->password_field("password") ?>
+	
+	<?php $f->label("password_confirmation") ?>
+	<?php $f->password_field("password_confirmation") ?>
+	
+	<?php $f->submit("Register") ?>
+<?php $f->end() ?>
+

@@ -1,0 +1,25 @@
+<ul class="posts">
+	<?php $i = $start; ?>
+	<?php foreach($posts as $post): ?>
+		<li>
+			<div class="number">
+				<?php h($i++) ?>.
+			</div>
+			<div class="vote">
+				<?php link_to("▲", "vote", array("vote" => array("post_id" => $post->id, "value" => 1), "class" => "upvote"), true) ?>
+				<?php link_to("▼", "vote", array("vote" => array("post_id" => $post->id, "value" => -1), "class" => "downvote"), true) ?>
+			</div>
+			<div class="post_info">
+				<h3>
+					<a href="<?php h($post->link_for()) ?>"><?php h($post->title) ?></a> <span><?php h($post->domain()) ?></span>
+				</h3>
+				<h4>
+					<?php h(plural($post->points, "point")) ?>
+					by <?php link_to($post->user->username, "user", array("username" => $post->user->username)) ?>
+					<?php h(time_ago_in_words($post->created_at)) ?> ago
+					| <?php link_to(plural($post->comments_count, "comment"), "post", array("id" => $post->id)) ?>
+				</h4>
+			</div>
+		</li>
+	<?php endforeach; ?>
+</ul>

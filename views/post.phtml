@@ -1,0 +1,87 @@
+<div class="post_info single">
+	<h3>
+		<a href="<?php h($post->link_for()) ?>"><?php h($post->title) ?></a> <span><?php h($post->domain()) ?></span>
+	</h3>
+	<h4>
+		<?php h(plural($post->points, "point")) ?>
+		by <?php link_to($post->user->username, "user", array("username" => $post->user->username)) ?>
+		<?php h(time_ago_in_words($post->created_at)) ?> ago
+		| <?php link_to(plural($post->comments_count, "comment"), "post", array("id" => $post->id)) ?>
+	</h4>
+	<?php if($post->text): ?>
+		<p>
+			<?php h($post->text) ?>
+		</p>
+	<?php endif; ?>
+</div>
+
+<?php if(isset($comment)): ?>
+	<?php if(isset($errors)): ?>
+		<div class="errors">
+			<ul>
+				<?php foreach($errors as $e): ?>
+					<li><?php h($e) ?></li>
+				<?php endforeach; ?>
+			</ul>
+		</div>
+	<?php endif; ?>
+	<?php form_for($comment, "POST", "comment", $f, array("class" => "post_comment")) ?>
+		<?php $f->hidden_field("post_id") ?>
+		<?php $f->text_area("text") ?>
+		<?php $f->submit("add comment") ?>
+	<?php $f->end() ?>
+<?php endif; ?>
+
+<?php if(isset($single_thread)): ?>
+	<p>
+		Viewing a single comment thread. <?php link_to("See all comments", "post", array("id" => $post->id)) ?>
+	</p>
+<?php endif; ?>
+
+<?php if(isset($reply)): ?>
+	<p>Reply to <?php h($reply->parent->user->username) ?>'s comment:</p>
+	<?php if(isset($errors)): ?>
+		<div class="errors">
+			<ul>
+				<?php foreach($errors as $e): ?>
+					<li><?php h($e) ?></li>
+				<?php endforeach; ?>
+			</ul>
+		</div>
+	<?php endif; ?>
+	<?php form_for($reply, "POST", "comment", $f, array("class" => "post_comment reply_comment")) ?>
+		<?php $f->hidden_field("post_id") ?>
+		<?php $f->hidden_field("parent_id") ?>
+		<?php $f->text_area("text") ?>
+		<?php $f->submit("reply") ?>
+	<?php $f->end() ?>
+<?php endif; ?>
+
+<?php function render_comment($comment) { ?>
+	<div class="comment">
+		<a name="comment_<?php h($comment->id) ?>">
+		<div class="vote">
+			<?php link_to("▲", "vote", array("vote" => array("comment_id" => $comment->id, "value" => 1), "class" => "upvote"), true) ?>
+			<?php link_to("▼", "vote", array("vote" => array("comment_id" => $comment->id, "value" => -1), "class" => "downvote"), true) ?>
+		</div>
+		<div class="rest">
+			<h3>
+				<?php link_to($comment->user->username, "user", array("username" => $comment->user->username)) ?>
+				<?php h(time_ago_in_words($comment->created_at)) ?> ago
+				| <a href="#comment_<?php h($comment->id) ?>">link</a>
+			</h3>
+			<p>
+				<?php h($comment->text) ?>
+			</p>
+			<h4><?php link_to("reply", "comment", array("id" => $comment->id)) ?></h4>
+
+			<?php foreach($comment->children as $c): ?>
+				<?php render_comment($c) ?>
+			<?php endforeach; ?>
+		</div>
+	</div>
+<?php } ?>
+
+<?php foreach($top_level_comments as $c): ?>
+	<?php render_comment($c) ?>
+<?php endforeach; ?>

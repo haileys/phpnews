@@ -1,0 +1,15 @@
+<div class="container queries">
+	<div class="top_bar">
+		<h2>Queries</h2>
+	</div>
+	<ul>
+		<?php global $db; ?>
+		<?php foreach($db->queries as $query): ?>
+			<li>
+				<div>(<code><?php h($query["query"]) ?></code>, <?php h(implode(", ", $query["params"])) ?>)</div>
+				<?php h(floor($query["time"] * 1000)) ?> ms
+			</li>
+		<?php endforeach; ?>	
+	</ul>	
+	<strong>Total time:</strong> <?php h(array_reduce(array_map(function($a) { return $a["time"]; }, $db->queries), function($a, $b) { return $a + $b; }) * 1000) ?> ms
+</div>

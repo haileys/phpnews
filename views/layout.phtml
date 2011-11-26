@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title><?php h(config("site_name")) ?></title>
+	<link href="style.css" rel="stylesheet" />
+	<style>
+	.container	{ background:<?php h(config("colors", "main")) ?>; }
+	.top_bar	{ background:<?php h(config("colors", "top_bar")) ?>; }
+	</style>
+</head>
+<body>	
+	<div class="container">
+		<div class="top_bar">
+			<a href="index.php" class="site_name"><?php h(config("site_name")) ?></a>
+			<div class="menu">
+				<?php link_to("new", "index", array("s" => "latest", "class" => isset($sort_order) && $sort_order == "latest" ? "sel" : "")); ?>
+				| <?php link_to("best", "index", array("s" => "best", "class" => isset($sort_order) && $sort_order == "best" ? "sel" : "")); ?>
+				| <?php link_to("submit", "submit", array("class" => isset($submit_page) ? "sel" : "")); ?>
+			</div>
+			<div class="user_info">
+				<?php if(current_user()): ?>
+					<?php link_to(current_user()->username." (".current_user()->karma.")", "user", array("username" => current_user()->username)) ?>
+					| <?php link_to("logout", "logout", array(), true); ?>
+				<?php else: ?>
+					<?php link_to("login", "login") ?>
+					| <?php link_to("register", "register") ?>
+				<?php endif; ?>
+			</div>
+		</div>
+		<div class="content">
+			<?php yield() ?>
+		</div>
+	</div>
+	
+	<?php /* uncomment below if you'd like to see query stats */ ?>
+	<?php include "queries.phtml"; ?>
+</body>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
+<script type="text/javascript" src="news.js"></script>
+</html>

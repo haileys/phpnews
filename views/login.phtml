@@ -1,0 +1,21 @@
+<h2>Login</h2>
+
+<?php if(!$user_session->errors->is_empty()): ?>
+	<div class="errors">
+		<ul>
+			<?php foreach($user_session->errors->full_messages() as $msg): ?>
+				<li><?php h($msg) ?></li>
+			<?php endforeach; ?>
+		</ul>
+	</div>
+<?php endif; ?>
+
+<?php form_for($user_session, "POST", "login", $f) ?>
+	<?php $f->label("username") ?>
+	<?php $f->text_field("username") ?>
+	
+	<?php $f->label("password") ?>
+	<?php $f->password_field("password") ?>
+	
+	<?php $f->submit("Login") ?>
+<?php $f->end() ?>

@@ -1,0 +1,24 @@
+<?php if(!$post->errors->is_empty()): ?>
+	<div class="errors">
+		<ul>
+			<?php foreach($post->errors->full_messages() as $msg): ?>
+				<li><?php h($msg) ?></li>
+			<?php endforeach; ?>
+		</ul>
+	</div>
+<?php endif; ?>
+
+<?php form_for($post, "POST", "submit", $f) ?>
+	<?php $f->label("title") ?>
+	<?php $f->text_field("title") ?>
+	
+	<?php $f->label("url") ?>
+	<?php $f->text_field("url") ?>
+	
+	<p><strong>or</strong></p>
+	
+	<?php $f->label("text") ?>
+	<?php $f->text_area("text") ?>
+	
+	<?php $f->submit("Submit") ?>
+<?php $f->end() ?>
